@@ -1,0 +1,3 @@
+[submodule "external/MaskInv"]
+	path = external/MaskInv
+	url = https://github.com/fdbtrs/Masked-Face-Recognition-KD.git
