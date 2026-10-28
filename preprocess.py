@@ -23,6 +23,7 @@ NUM_WORKERS = 0  # Works reliably on Windows too.
 # Adjust these paths if your extracted directory layout differs.
 TRAIN_ROOT = DATA_DIR / "train"
 VERIFICATION_ROOT = DATA_DIR / "verification"
+VERIFICATION_DIR = VERIFICATION_ROOT / "masked_whn"
 PAIRS_FILE = VERIFICATION_ROOT / "masked_pairs.txt"
 
 torch.manual_seed(SEED)
@@ -232,7 +233,7 @@ def read_verification_pairs(pairs_file, image_root):
 
 verification_pairs = read_verification_pairs(
     pairs_file=PAIRS_FILE,
-    image_root=VERIFICATION_ROOT,
+    image_root=VERIFICATION_DIR,
 )
 
 
