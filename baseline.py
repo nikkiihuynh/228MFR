@@ -16,7 +16,7 @@ import numpy as np
 # --------------------------------------------------
 # 1. Configuration
 # --------------------------------------------------
-REPO_ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = Path(__file__).resolve().parent
 
 # Make the MaskInv backbone and metrics helpers importable.
 sys.path.insert(0, str(REPO_ROOT / "scripts")) # make scripts dir and move baseline & preprocess.py into it.
@@ -67,7 +67,7 @@ def read_pairs(pairs_file, image_dir, verification_root):
             # Ignore blank lines.
             if not parts:
                 continue
-            if len(parts) != 3 or not parts[2] not in ("0", "1"):
+            if len(parts) != 3 or parts[2] not in ("0", "1"):
                 raise ValueError(
                     f"Expected '<image a> <image b> <0 or 1>' on line "
                     f"{line_number} of {pairs_file}: {line.strip()}"
@@ -109,7 +109,7 @@ def load_model(weights_path, device):
     model = iresnet100(num_features=EMBEDDING_SIZE)
 
     try:
-        state = torch.load(weights_path, map_location=device, weight_only=True)
+        state = torch.load(weights_path, map_location=device, weights_only=True)
     except TypeError:
         state = torch.load(weights_path, map_location=device)
 
@@ -152,7 +152,7 @@ def compute_embeddings(paths, weights_path, batch_size, device_name):
     unreadable = []
 
     with torch.no_grad():
-        for i in range(0, len(paths), batch_size):
+        for start in range(0, len(paths), batch_size):
             batch_paths = []
             batch = []
 
@@ -250,7 +250,7 @@ def run_evaluation(pairs, embeddings, output_dir, seed, validation_split, target
     # Choose each threshold on the validation split only, then apply to test.
     operating_points = {}
     for target in target_fars:
-        threshold = metrics.threshold_at_far(val_scores, val_labels, target)
+        threshold = metrics.threshold_for_far(val_scores, val_labels, target)
         operating_points[f"FAR<={target:g}"] = {
             "val": metrics.summarize_at(val_scores, val_labels, threshold),
             "test": metrics.summarize_at(test_scores, test_labels, threshold),
@@ -297,8 +297,8 @@ def save_error_examples(output_dir, kept, test_index, test_scores, test_labels):
 
     # Genuine Pairs with Lowest Scores = False Rejects
     false_rejects = [
-        (test_pairs[i], test_scores[i], test_labels[i]) for i in order[::-1][:20]
-    ]
+        (test_pairs[i], test_scores[i]) for i in order if test_labels[i] == 1
+    ][:20]
 
     # Impostor Pairs with Highest Scores = False Accepts
     false_accepts = [
@@ -381,7 +381,7 @@ def main():
     parser.add_argument("--out", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--seed", type=int, default=DEFAULT_SEED)
     parser.add_argument("--validation-split", type=int, default=VALIDATION_SPLIT)
-    parser.add_argument("--batch-size", type=int, default=BATCH_SIZE)
+    parser.add_argument("--batch-size", type=float, default=BATCH_SIZE)
     parser.add_argument("--target-far", type=float, nargs="+", default=TARGET_FARS, help="FAR targets")
     args = parser.parse_args()
     set_seed(args.seed)

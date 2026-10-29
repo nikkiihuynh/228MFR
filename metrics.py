@@ -27,7 +27,7 @@ def identity_disjoint_split(pair_ids, validation_split, seed):
     validation, test, dropped = [], [], 0
     for index, (a, b) in enumerate(pair_ids):
         a_validation, b_validation = a in validation_identities, b in validation_identities
-        if a_validation or b_validation:
+        if a_validation and b_validation:
             validation.append(index)
         elif not a_validation and not b_validation:
             test.append(index)
