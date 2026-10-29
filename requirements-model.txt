@@ -1,0 +1,6 @@
+# Install the core requirements first. Choose a CPU/CUDA torch wheel appropriate
+# for your machine from https://pytorch.org/get-started/locally/.
+torch>=2.2,<3
+torchvision>=0.17,<1
+# Optional alignment backend; omit if images are already aligned.
+facenet-pytorch>=2.6,<3

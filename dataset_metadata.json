@@ -1,0 +1,10 @@
+{
+  "name": "Real Masked Face Dataset (RMFD)",
+  "origin_url": "https://github.com/deenovita/RWMFD",
+  "citation": "https://arxiv.org/pdf/2003.09093",
+  "license": "N/A",
+  "access_terms": "Open Source",
+  "sessions": "Unknown: do not interpret filename prefixes as sessions without documentation",
+  "identity_mapping_verified": false,
+  "notes": ""
+}

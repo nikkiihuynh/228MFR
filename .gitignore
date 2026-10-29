@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+data/
+runs/
+weights/
+external/
+*.pth
+*.pt
+*.npz
